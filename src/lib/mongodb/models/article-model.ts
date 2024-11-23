@@ -4,8 +4,10 @@ import { IUser } from "./user-model";
 export interface IArticle extends Document {
   _id: mongoose.Types.ObjectId;
   title: string;
+  slug: string;
   content: string;
   author: mongoose.Types.ObjectId | IUser;
+  createdAt: Date;
 }
 
 const ArticleSchema = new mongoose.Schema(
@@ -17,6 +19,11 @@ const ArticleSchema = new mongoose.Schema(
       minlength: 3,
       maxlength: 200,
     },
+    slug: {
+      type: String,
+      required: true,
+      unique: true,
+    },
     content: {
       type: String,
       required: true,
@@ -26,6 +33,10 @@ const ArticleSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
+    },
+    createdAt: {
+      type: Date,
+      default: Date.now,
     },
   },
   {

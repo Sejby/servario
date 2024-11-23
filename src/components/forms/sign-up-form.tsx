@@ -1,39 +1,45 @@
 "use client";
 
-import { signUpUserAction } from "@/actions/sign-up-user-action";
-import { useRouter } from "next/navigation";
-import { useActionState, useState } from "react";
+import { signUpUserAction } from "@/actions/users/sign-up-user-action";
+import { useActionState } from "react";
+import { Button, Card, Input } from "@/lib/next-ui/next-ui";
+import toast from "react-hot-toast";
 
 export default function SignUpForm() {
   const [error, action, isPending] = useActionState(signUpUserAction, null);
 
+  if (error) {
+    toast.error(error);
+  }
+
   return (
-    <div className="max-w-md mx-auto mt-8 p-6 bg-white rounded-lg shadow-md">
+    <Card className="mx-auto max-w-[550px] p-10">
       <h1 className="text-2xl font-bold mb-6">Registrace</h1>
 
-      <form action={action} className="flex flex-col gap-y-2">
-        <input
+      <form action={action} className="space-y-4">
+        <Input
           type="text"
           name="username"
-          placeholder="Uživatelské jméno..."
-          className="py-2 px-3 rounded-sm"
+          label="Uživatelské jméno"
+          placeholder="pepazdepa123..."
         />
-        <input
+        <Input
           type="password"
           name="password"
-          placeholder="Heslo..."
-          className="py-2 px-3 rounded-sm"
+          label="Heslo"
+          placeholder="heslo123..."
         />
-        <button
+        <Button
           type="submit"
           disabled={isPending}
-          className="bg-blue-500 text-white py-2 px-3 rounded-sm"
+          isLoading={isPending}
+          color="danger"
+          variant="flat"
         >
-          Submit
-        </button>
-        {isPending && <p>Please wait...</p>}
+          Registrovat
+        </Button>
         {error && <p className="text-red-500">{error}</p>}
       </form>
-    </div>
+    </Card>
   );
 }

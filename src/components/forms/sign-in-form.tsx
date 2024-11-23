@@ -1,15 +1,17 @@
 "use client";
-
+import { Button, Card, Input } from "@/lib/next-ui/next-ui";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import toast from "react-hot-toast";
 
 export default function SignInForm() {
   const router = useRouter();
-  const [error, setError] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    setLoading(true);
     const formData = new FormData(e.currentTarget);
 
     try {
@@ -19,66 +21,64 @@ export default function SignInForm() {
         redirect: false,
       });
 
-      console.log("Sign in response:", response); // Přidejte tento log
-
       if (response?.error) {
-        setError(`Přihlašovací chyba: ${response.error}`);
+        toast.error("Neplatné údaje k přihlášení");
+        setLoading(false);
         return;
       }
 
       if (response?.ok === false) {
-        setError("Došlo k chybě při přihlašování");
+        toast.error("Došlo k chybě při přihlašování");
+        setLoading(false);
         return;
       }
 
+      toast.success("Přihlášení proběhlo úspěšně");
       router.push("/dashboard");
       router.refresh();
     } catch (error) {
-      console.error("Přihlašovací chyba:", error);
-      setError("Došlo k chybě při přihlašování");
+      console.log(error);
+      toast.error("Došlo k neočekávané chybě při přihlašování");
     }
+
+    setLoading(false);
   }
 
   return (
-    <div className="max-w-md mx-auto mt-8 p-6 bg-white rounded-lg shadow-md">
+    <Card className="mx-auto max-w-[550px] p-10">
       <h1 className="text-2xl font-bold mb-6">Přihlášení</h1>
-
-      {error && (
-        <div className="mb-4 p-3 bg-red-100 text-red-700 rounded">{error}</div>
-      )}
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="block mb-1">
-            Username
-            <input
-              name="username"
-              type="text"
-              required
-              className="w-full p-2 border rounded"
-            />
-          </label>
+          <Input
+            type="text"
+            name="username"
+            label="Uživatelské jméno"
+            placeholder="pepazdepa123..."
+            required
+          />
         </div>
 
         <div>
-          <label className="block mb-1">
-            Heslo
-            <input
-              name="password"
-              type="password"
-              required
-              className="w-full p-2 border rounded"
-            />
-          </label>
+          <Input
+            type="password"
+            name="password"
+            label="Heslo"
+            placeholder="heslo123..."
+            required
+          />
         </div>
 
-        <button
+        <Button
           type="submit"
-          className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
+          variant="bordered"
+          color="success"
+          disabled={loading}
+          isLoading={loading}
         >
           Přihlásit se
-        </button>
+        </Button>
       </form>
-    </div>
+    </Card>
   );
 }

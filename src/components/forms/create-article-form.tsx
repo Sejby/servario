@@ -1,7 +1,7 @@
 "use client";
 
-import { createArticleAction } from "@/actions/articles-actions";
-import { signUpUserAction } from "@/actions/sign-up-user-action";
+import { createArticleAction } from "@/actions/articles/articles-actions";
+import { signUpUserAction } from "@/actions/users/sign-up-user-action";
 import { useSession } from "next-auth/react";
 import { useActionState } from "react";
 
