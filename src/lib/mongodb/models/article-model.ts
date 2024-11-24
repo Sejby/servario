@@ -1,13 +1,13 @@
-import mongoose from "mongoose";
+import mongoose, { Types } from "mongoose";
 import { IUser } from "./user-model";
 
-export interface IArticle extends Document {
-  _id: mongoose.Types.ObjectId;
+export interface IArticle {
+  _id: Types.ObjectId | string;
   title: string;
   slug: string;
   content: string;
-  author: mongoose.Types.ObjectId | IUser;
-  createdAt: Date;
+  author: Types.ObjectId | IUser;
+  createdAt: Date | string;
 }
 
 const ArticleSchema = new mongoose.Schema(

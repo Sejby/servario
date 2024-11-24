@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@nextui-org/react": "^2.4.8",
+    "@nextui-org/table": "^2.0.40",
     "framer-motion": "^11.11.17",
     "mongoose": "^8.8.2",
     "next": "15.0.3",

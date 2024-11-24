@@ -14,7 +14,7 @@ export default async function ArticleDetail({
   return (
     <div className="min-h-screen py-10 px-5">
       <Card className="max-w-4xl mx-auto">
-        <div className="p-6 text-center bg-gradient-to-r bg-gray-900 text-white rounded-t-lg">
+        <div className="p-6 text-center bg-gradient-to-r bg-gray-950 text-white rounded-t-lg">
           <h1 className="mb-4 text-3xl">{article.title}</h1>
           <h3 className="opacity-90">
             <strong>Autor:</strong> {article.author.username}
@@ -25,8 +25,8 @@ export default async function ArticleDetail({
         </div>
 
         <Divider />
-        <div className="p-6 bg-white rounded-b-lg">
-          <p className="prose prose-lg text-gray-700">{article.content}</p>
+        <div className="p-6 bg-zinc-200 rounded-b-lg">
+          <p className="prose prose-lg text-gray-800">{article.content}</p>
         </div>
       </Card>
     </div>
