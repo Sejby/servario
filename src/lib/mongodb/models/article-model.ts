@@ -16,7 +16,6 @@ const ArticleSchema = new mongoose.Schema(
       type: String,
       required: true,
       trim: true,
-      minlength: 3,
       maxlength: 200,
     },
     slug: {
@@ -27,7 +26,6 @@ const ArticleSchema = new mongoose.Schema(
     content: {
       type: String,
       required: true,
-      minlength: 10,
     },
     author: {
       type: mongoose.Schema.Types.ObjectId,

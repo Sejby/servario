@@ -3,9 +3,10 @@
 import { connectToDB } from "@/lib/mongodb/mongo";
 import User from "@/lib/mongodb/models/user-model";
 import NextAuth from "next-auth";
+import { AuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 
-const handler = NextAuth({
+const authOptions: AuthOptions = {
   session: {
     strategy: "jwt",
   },
@@ -60,16 +61,14 @@ const handler = NextAuth({
       return token;
     },
     async session({ session, token }) {
-      // Přidejte informace do session
-      if (token) {
-        session.user = {
-          id: token.id,
-          username: token.username,
-        };
-      }
+      session.user.username = token.username;
+      session.user.id = token.id;
+
       return session;
     },
   },
-});
+};
+
+const handler = NextAuth(authOptions);
 
 export { handler as GET, handler as POST };

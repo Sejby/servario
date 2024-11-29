@@ -1,6 +1,7 @@
 "use client";
 
 import { createArticleAction } from "@/actions/articles/articles-actions";
+import { Button, Card, Input } from "@/lib/next-ui/next-ui";
 import { useSession } from "next-auth/react";
 import { useActionState } from "react";
 
@@ -9,33 +10,25 @@ export default function CreateArticleForm() {
   const { data: session } = useSession();
 
   return (
-    <div className="max-w-md mx-auto mt-8 p-6 bg-white rounded-lg shadow-md">
+    <Card className="mx-auto max-w-[550px] p-10">
       <h1 className="text-2xl font-bold mb-6">Vytvoření příspěvku</h1>
 
-      <form action={action} className="flex flex-col gap-y-2">
-        <input type="hidden" name="id" value={session?.user.id} />
-        <input
-          type="text"
-          name="title"
-          placeholder="Nadpis..."
-          className="py-2 px-3 rounded-sm"
-        />
-        <input
-          type="text"
-          name="content"
-          placeholder="Obsah..."
-          className="py-2 px-3 rounded-sm"
-        />
-        <button
+      <form action={action} className="space-y-4">
+        <input type="hidden" name="id" defaultValue={session?.user.id} />
+        <Input type="text" name="title" label="Nadpis (max. 200 znaků)" placeholder="Příběh Pepy..." />
+        <Input type="text" name="content" label="Obsah" placeholder="Pepa z depa došel do depa..." />
+        <Button
           type="submit"
+          variant="bordered"
+          color="success"
           disabled={isPending}
-          className="bg-blue-500 text-white py-2 px-3 rounded-sm"
+          isLoading={isPending}
         >
           Vytvořit
-        </button>
+        </Button>
         {isPending && <p>Načítám...</p>}
         {error && <p className="text-red-500">{error}</p>}
       </form>
-    </div>
+    </Card>
   );
 }

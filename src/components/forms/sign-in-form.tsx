@@ -32,16 +32,15 @@ export default function SignInForm() {
         setLoading(false);
         return;
       }
-
-      toast.success("Přihlášení proběhlo úspěšně");
       router.push("/dashboard");
       router.refresh();
+
+      toast.success("Přihlášení proběhlo úspěšně");
     } catch (error) {
       console.log(error);
       toast.error("Došlo k neočekávané chybě při přihlašování");
+      setLoading(false);
     }
-
-    setLoading(false);
   }
 
   return (

@@ -5,8 +5,9 @@ import { connectToDB } from "@/lib/mongodb/mongo";
 import User from "@/lib/mongodb/models/user-model";
 import mongoose from "mongoose";
 import slugify from "slugify";
-import { getServerSession, Session } from "next-auth";
+import { getServerSession } from "next-auth";
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 
 export type Article = {
   _id: string;
@@ -20,12 +21,6 @@ export type Article = {
 export async function getArticles() {
   try {
     await connectToDB();
-
-    const session: Session | null = await getServerSession();
-
-    if (session?.user === null) {
-      return "You are not logged in";
-    }
 
     const articles = await Article.find({}).populate("author", "username");
 
@@ -54,12 +49,6 @@ export async function createArticleAction(
   try {
     await connectToDB();
 
-    const session: Session | null = await getServerSession();
-
-    if (session?.user === null) {
-      return "You are not logged in";
-    }
-
     const userId = formData.get("id") as string;
     const title = formData.get("title") as string;
     const slug: string = slugify(title);
@@ -84,7 +73,8 @@ export async function createArticleAction(
       return "User not found";
     }
 
-    return "Article created successfully";
+    revalidatePath("/dashboard");
+    redirect("/dashboard");
   } catch (error) {
     console.log(error);
     return "Failed to create article";
@@ -116,11 +106,6 @@ export async function getArticleBySlug(slug: string) {
 export async function getArticleById(id: string) {
   try {
     await connectToDB();
-    const session: Session | null = await getServerSession();
-
-    if (session?.user === null) {
-      return "You are not logged in";
-    }
 
     const article = await Article.findOne({ id });
 
@@ -138,11 +123,6 @@ export async function getArticleById(id: string) {
 export async function deleteArticleById(id: string) {
   try {
     await connectToDB();
-    const session: Session | null = await getServerSession();
-
-    if (session?.user === null) {
-      return "You are not logged in";
-    }
 
     const deletedArticle = await Article.findByIdAndDelete(id);
 
@@ -165,12 +145,6 @@ export async function editArticleAction(
 ) {
   try {
     await connectToDB();
-
-    const session: Session | null = await getServerSession();
-
-    if (session?.user === null) {
-      return "You are not logged in";
-    }
 
     const articleId = formData.get("article-id") as string;
     const title = formData.get("title") as string;
