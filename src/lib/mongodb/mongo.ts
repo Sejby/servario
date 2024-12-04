@@ -6,7 +6,7 @@ if (!MONGODB_URI) {
   throw new Error("Please define the MONGODB_URI environment variable");
 }
 
-let globalMongoose = global as any;
+const globalMongoose = global as { mongoose?: mongoose.Mongoose };
 
 let connected = false;
 

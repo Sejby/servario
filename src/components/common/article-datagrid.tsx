@@ -14,8 +14,17 @@ import {
   TableRow,
 } from "@nextui-org/table";
 import Link from "next/link";
+import toast from "react-hot-toast";
 
 export default function ArticleDatagrid({ articles }: { articles: Article[] }) {
+  const handleDelete = (_id: string) => {
+    try {
+      deleteArticleById(_id);
+      toast.success("Článek byl úspěšně smazán");
+    } catch (error) {
+      toast.error("Během mazání článku došlo k chybě");
+    }
+  };
   return (
     <div>
       <Table aria-label="List of articles">
@@ -54,7 +63,7 @@ export default function ArticleDatagrid({ articles }: { articles: Article[] }) {
                 </Tooltip>
                 <Tooltip content="Smazat článek">
                   <Button
-                    onClick={() => deleteArticleById(article._id)}
+                    onClick={() => handleDelete(article._id)}
                     color="danger"
                     variant="flat"
                   >
