@@ -12,7 +12,7 @@ export default function SignOutButton() {
     try {
       setIsLoading(true);
       await signOut({ callbackUrl: "/signin" });
-    } catch (error) {
+    } catch {
       toast.error("Odhlášení selhalo, zkuste to prosím znovu.");
       setIsLoading(false);
     }

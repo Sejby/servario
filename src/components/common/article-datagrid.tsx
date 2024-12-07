@@ -21,7 +21,7 @@ export default function ArticleDatagrid({ articles }: { articles: Article[] }) {
     try {
       deleteArticleById(_id);
       toast.success("Článek byl úspěšně smazán");
-    } catch (error) {
+    } catch {
       toast.error("Během mazání článku došlo k chybě");
     }
   };
