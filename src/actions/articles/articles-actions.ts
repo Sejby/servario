@@ -18,11 +18,6 @@ export type Article = {
   createdAt: string;
 };
 
-type PreviousState = {
-  articles: Article[];
-  user?: { id: string; name: string };
-};
-
 export async function getArticles() {
   const cacheKey = "articles";
 
@@ -61,7 +56,7 @@ export async function getArticles() {
 }
 
 export async function createArticleAction(
-  previousState: PreviousState,
+  previousState: unknown,
   formData: FormData
 ) {
   try {
@@ -158,7 +153,7 @@ export async function deleteArticleById(id: string) {
 }
 
 export async function editArticleAction(
-  previousState: PreviousState,
+  previousState: unknown,
   formData: FormData
 ) {
   try {
