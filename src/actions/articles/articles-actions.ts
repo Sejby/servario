@@ -8,6 +8,7 @@ import slugify from "slugify";
 import { getServerSession } from "next-auth";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import toast from "react-hot-toast";
 
 export type Article = {
   _id: string;
@@ -70,14 +71,14 @@ export async function createArticleAction(
     );
 
     if (!user) {
-      return "User not found";
+      return { success: false, message: "User not found" };
     }
 
     revalidatePath("/dashboard");
-    redirect("/dashboard");
+    return { success: true, message: "Článek úspěšně vytvořen!" };
   } catch (error) {
-    console.log(error);
-    return "Failed to create article";
+    console.error(error);
+    return { success: false, message: "Při vytvoření článku nastala chyba." };
   }
 }
 
@@ -158,12 +159,13 @@ export async function editArticleAction(
     );
 
     if (!updatedArticle) {
-      return "Article not found";
+      return { success: false, message: "Příspěvek nebyl nalezen." };
     }
 
-    return "Article updated successfully";
+    revalidatePath("/dashboard");
+    return { success: true, message: "Příspěvek byl úspěšně upraven!" };
   } catch (error) {
-    console.log(error);
-    return "Failed to update article";
+    console.error(error);
+    return { success: false, message: "Nepodařilo se upravit příspěvek." };
   }
 }

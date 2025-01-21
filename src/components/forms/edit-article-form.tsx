@@ -4,7 +4,9 @@ import {
   Article,
   editArticleAction,
 } from "@/actions/articles/articles-actions";
-import { useActionState } from "react";
+import { Button, Card, Input } from "@/lib/next-ui/next-ui";
+import { useActionState, useEffect } from "react";
+import toast from "react-hot-toast";
 
 export default function EditArticleForm({
   serializedArticle,
@@ -12,38 +14,50 @@ export default function EditArticleForm({
   serializedArticle: string;
 }) {
   const article = JSON.parse(serializedArticle) as Article;
-  const [error, action, isPending] = useActionState(editArticleAction, null);
+  const [state, action, isPending] = useActionState(editArticleAction, null);
+
+  useEffect(() => {
+    if (state?.success) {
+      toast.success(state.message || "Článek byl úspěšně upraven!");
+    } else if (state?.success === false) {
+      toast.error(state.message || "Nepodařilo se upravit článek.");
+    }
+  }, [state]);
 
   return (
-    <div className="max-w-md mx-auto mt-8 p-6 bg-white rounded-lg shadow-md">
+    <Card className="mx-auto max-w-[550px] p-10">
       <h1 className="text-2xl font-bold mb-6">Upravit příspěvek</h1>
 
-      <form action={action} className="flex flex-col gap-y-2">
+      <form action={action} className="space-y-4">
         <input type="hidden" name="article-id" value={article._id} />
-        <input
+        <Input
           type="text"
           name="title"
+          label="Nadpis (max. 200 znaků)"
           defaultValue={article.title}
           placeholder="Nadpis..."
-          className="py-2 px-3 rounded-sm"
         />
-        <input
+        <Input
           type="text"
           name="content"
+          label="Obsah"
           defaultValue={article.content}
           placeholder="Obsah..."
-          className="py-2 px-3 rounded-sm"
         />
-        <button
+        <Button
           type="submit"
+          variant="bordered"
+          color="primary"
           disabled={isPending}
-          className="bg-blue-500 text-white py-2 px-3 rounded-sm"
+          isLoading={isPending}
         >
           Upravit
-        </button>
+        </Button>
         {isPending && <p>Načítám...</p>}
-        {error && <p className="text-red-500">{error}</p>}
+        {state?.success === false && (
+          <p className="text-red-500">{state.message}</p>
+        )}
       </form>
-    </div>
+    </Card>
   );
 }
