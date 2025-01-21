@@ -26,11 +26,11 @@ Tato aplikace je vyvinuta pomocí frameworku **Next.js** a nabízí funkce pro r
 
 - vytvořit v root složce projektu .env a vložit do něj např. toto:
 
-MONGODB_URI=mongodb://root:pwd@localhost:27017/
+```MONGODB_URI=mongodb://root:pwd@localhost:27017/
 NODE_ENV=development
 NEXTAUTH_URL=http://localhost:3000
 NEXTAUTH_SECRET=mytestApp
-
+```
 - docker compose up
 
 - yarn run dev
