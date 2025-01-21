@@ -5,10 +5,9 @@ import { connectToDB } from "@/lib/mongodb/mongo";
 import User from "@/lib/mongodb/models/user-model";
 import mongoose from "mongoose";
 import slugify from "slugify";
-import { getServerSession } from "next-auth";
+import { getServerSession, Session } from "next-auth";
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
-import toast from "react-hot-toast";
+import redis from "@/lib/redis/redis";
 
 export type Article = {
   _id: string;
@@ -19,11 +18,26 @@ export type Article = {
   createdAt: string;
 };
 
-export async function getArticles() {
-  try {
-    await connectToDB();
+type PreviousState = {
+  articles: Article[];
+  user?: { id: string; name: string };
+};
 
-    const articles = await Article.find({}).populate("author", "username");
+export async function getArticles() {
+  const cacheKey = "articles";
+
+  try {
+    const cachedArticles = await redis.get(cacheKey);
+
+    if (cachedArticles) {
+      console.log("Loading articles from cache");
+      return JSON.parse(cachedArticles);
+    }
+
+    await connectToDB();
+    const articles = await Article.find({})
+      .populate("author", "username")
+      .sort({ createdAt: -1 });
 
     const serializedArticles = articles.map((article) => {
       return {
@@ -36,15 +50,18 @@ export async function getArticles() {
       };
     });
 
+    await redis.set(cacheKey, JSON.stringify(serializedArticles), "EX", 10);
+
+    console.log("Loading articles from database and caching them");
     return serializedArticles;
   } catch (error) {
-    console.log(error);
+    console.error("Failed to fetch articles:", error);
     return [];
   }
 }
 
 export async function createArticleAction(
-  previousState: any,
+  previousState: PreviousState,
   formData: FormData
 ) {
   try {
@@ -141,7 +158,7 @@ export async function deleteArticleById(id: string) {
 }
 
 export async function editArticleAction(
-  previousState: any,
+  previousState: PreviousState,
   formData: FormData
 ) {
   try {

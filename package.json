@@ -12,6 +12,7 @@
     "@nextui-org/react": "^2.4.8",
     "@nextui-org/table": "^2.0.40",
     "framer-motion": "^11.11.17",
+    "ioredis": "^5.4.2",
     "mongoose": "^8.8.2",
     "next": "15.0.3",
     "next-auth": "^4.24.10",
