@@ -22,7 +22,7 @@ Tato aplikace je vyvinuta pomocí frameworku **Next.js** a nabízí funkce pro r
 ## Instalace a spuštění
 - git clone https://github.com/Sejby/servario.git
 
-- yarn install (doporučuji využít yarn místo npm, rozběhnout next.js v dockeru se mi nepodařilo a npm má problém s některými závislostmi)
+- yarn install
 
 - vytvořit v root složce projektu .env a vložit do něj např. toto:
 
